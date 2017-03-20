@@ -42,11 +42,23 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
 
 	<script src="lib/js-sha/sha1.js"></script>
+	<script src="lib/oauth.io/oauth.io.js"></script>
 
 
 	<script src="social-request-controller.js"></script>
 
-
+<script src="https://www.gstatic.com/firebasejs/3.7.2/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCIa1DaJHZ7Hcr4qYpwnYNh7ybkqFmn7L8",
+    authDomain: "sandeep-app-f841f.firebaseapp.com",
+    databaseURL: "https://sandeep-app-f841f.firebaseio.com",
+    storageBucket: "sandeep-app-f841f.appspot.com",
+    messagingSenderId: "173314726936"
+  };
+  firebase.initializeApp(config);
+</script>
 <div ng-controller="SocialRequestController as ctrl">
 
 	<div class="instgramProfile">
@@ -71,6 +83,13 @@
 		<i class="fa fa-twitter" aria-hidden="true"></i>
 		Connect your profile with Twitter
 	</div>
+
+
+	<div class="in-login" ng-click="twitterLogin()">
+		<i class="fa fa-twitter" aria-hidden="true"></i>
+		Connect your profile with Twitter
+	</div>
+
 </div>
 
 
