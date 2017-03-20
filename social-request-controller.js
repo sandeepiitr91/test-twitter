@@ -92,7 +92,7 @@ function SocialRequestController($scope, $http) {
                 $scope.hmac_sha1 = encodeURIComponent(shaObj.getHMAC($scope.oauth_consumer_secret + "&", "TEXT", "SHA-1", "B64"));
             }
         }
-        var _authHeader = ['OAuth oauth_callback="' + encodeURIComponent(window.location.origin) + '"',
+        var _authHeader = ['OAuth oauth_callback="' + encodeURIComponent('https://sandeepiitr91.github.io/test-twitter/') + '"',
             'oauth_consumer_key="' + $scope.requiredParameters.oauth_consumer_key + '"',
             'oauth_nonce="' + $scope.requiredParameters.oauth_nonce + '"',
             'oauth_signature_method="HMAC-SHA1"',
