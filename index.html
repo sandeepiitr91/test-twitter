@@ -1,0 +1,80 @@
+
+<html ng-app="dtr">
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+	<!--<link rel="shortcut icon" href="assets/images/favicon.ico">-->
+	<title ng-bind="pageTitle + ' | DateTheRamp'"></title>
+	<meta name="description" content="{{pageDesc}}">
+
+	<meta property="og:url" content="http://www.datetheramp.com/"/>
+	<meta property="og:type" content="website"/>
+	<meta property="og:title" content="DateTheRamp - Luxury Fashion Rental"/>
+	<meta property="og:description" content="DateTheRamp is a members-only luxury fashion rental service for women. At DateTheRamp, members can rent authentic designer wear at a fraction of the original price."/>
+	<meta property="og:image" content="http://www.datetheramp.com/assets/images/logo-square.png"/>
+</head>
+
+<body>
+
+
+<!-- ================================== CSS ================================ -->
+	<!-- BootStrap and Fonts Awesome -->
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+	<!-- build:template
+	<link href="css/dtr-app-1.0.0.<%= appCSSversion %>.min.css" rel = "stylesheet">
+	<!-- /build -->
+	<!-- ================================== CSS ================================ -->
+
+
+
+	<!--- =============================== Scripts =============================== -->
+
+
+
+	<!-- jQ, Bootstrap -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+
+	<script src="lib/js-sha/sha1.js"></script>
+
+
+	<script src="social-request-controller.js"></script>
+
+
+<div ng-controller="SocialRequestController as ctrl">
+
+	<div class="instgramProfile">
+		<div class="in-login" ng-click="ctrl.loginWithInstagram()">
+			<i class="fa fa-instagram" aria-hidden="true"></i>
+			Connect your profile with Instagram
+		</div>
+		<div class="social-user-info" ng-if="ctrl.instagramProfileConnected">
+			<div class="overflow-hidden">
+				<span class="inline key">Name:</span>
+				<span class="key-value inline ">{{ctrl.instagramUserInfo.full_name}}</span>
+			</div>
+			<div class="overflow-hidden">
+				<span class="inline key">ID:</span>
+				<span class="key-value inline ">{{ctrl.instagramUserInfo.id}}</span>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="in-login" ng-click="twitterAuthenticate()">
+		<i class="fa fa-twitter" aria-hidden="true"></i>
+		Connect your profile with Twitter
+	</div>
+</div>
+
+
+</body>
+
+</html>
+
