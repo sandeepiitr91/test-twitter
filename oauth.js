@@ -5569,6 +5569,3 @@ module.exports = function(document) {
 
 },{}]},{},[8])(8)
 });
-/**
- * Created by Sandeep Kumar on 3/20/2017.
- */

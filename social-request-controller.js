@@ -1,12 +1,12 @@
-var app = angular.module('dtr', []);
+var sm = angular.module('socialModule', []);
 
-app.config(function ($httpProvider) {
+sm.config(function ($httpProvider) {
     $httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
 })
 
 SocialRequestController.$inject = ["$scope", "$http"];
-app.controller("SocialRequestController", SocialRequestController);
+sm.controller("SocialRequestController", SocialRequestController);
 
 
 function SocialRequestController($scope, $http) {
@@ -66,45 +66,40 @@ function SocialRequestController($scope, $http) {
     };
 
 
-    $scope.twitterAuthenticate = function () {
-        var nonceObj = new jsSHA(Math.round((new Date()).getTime() / 1000.0), "TEXT");
-        $scope.oauth_consumer_secret = "vlv4rGektIJYW8cPnzVCSDAY18lgJrbqtoeuGLDA0kFbZhRUOF";
-        $scope.endpoint = "https://api.twitter.com/oauth/request_token";
-        $scope.requiredParameters = {};
-        $scope.requiredParameters['oauth_consumer_key'] = "7e7u2AdYFdyJlwBBRKUWtaG0z";
-        $scope.requiredParameters['oauth_nonce'] = nonceObj.getHash("SHA-1", "HEX");
-        $scope.requiredParameters['oauth_signature_method'] = "HMAC-SHA1";
-        $scope.requiredParameters['oauth_timestamp'] = Math.round((new Date()).getTime() / 1000.0);
-        $scope.requiredParameters['oauth_version'] = "1.0";
-        $scope.base_signature_string = "POST&" + encodeURIComponent($scope.endpoint) + "&";
+  /*  $scope.twitterAuthenticate = function () {
+            var nonceObj = new jsSHA(Math.round((new Date()).getTime() / 1000.0), "TEXT");
+         $scope.oauth_consumer_secret = "vlv4rGektIJYW8cPnzVCSDAY18lgJrbqtoeuGLDA0kFbZhRUOF";
+         $scope.endpoint = "https://api.twitter.com/oauth/request_token";
+         $scope.requiredParameters = {};
+         $scope.requiredParameters['oauth_consumer_key'] = "7e7u2AdYFdyJlwBBRKUWtaG0z";
+         $scope.requiredParameters['oauth_nonce'] = Math.floor(Math.random() * chars.length);
+         $scope.requiredParameters['oauth_signature_method'] = "HMAC-SHA1";
+         $scope.requiredParameters['oauth_timestamp'] = Math.round((new Date()).getTime() / 1000.0);
+         $scope.requiredParameters['oauth_version'] = "1.0";
+         $scope.base_signature_string = "POST&" + encodeURIComponent($scope.endpoint) + "&";
 
-        var requiredParameterKeys = Object.keys($scope.requiredParameters);
-        for (var i = 0; i < requiredParameterKeys.length; i++) {
-            if (i == requiredParameterKeys.length - 1) {
-                $scope.base_signature_string += encodeURIComponent(requiredParameterKeys[i] + "=" + $scope.requiredParameters[requiredParameterKeys[i]]);
-            } else {
-                $scope.base_signature_string += encodeURIComponent(requiredParameterKeys[i] + "=" + $scope.requiredParameters[requiredParameterKeys[i]] + "&");
-            }
-        }
-        if (typeof $scope.base_signature_string !== "undefined" && $scope.base_signature_string.length > 0) {
-            if (typeof $scope.oauth_consumer_secret !== "undefined" && $scope.oauth_consumer_secret.length > 0) {
-                var shaObj = new jsSHA($scope.base_signature_string, "TEXT");
-                $scope.hmac_sha1 = encodeURIComponent(shaObj.getHMAC($scope.oauth_consumer_secret + "&", "TEXT", "SHA-1", "B64"));
-            }
-        }
-        var _authHeader = ['OAuth oauth_callback="' + encodeURIComponent('https://sandeepiitr91.github.io/test-twitter/') + '"',
-            'oauth_consumer_key="' + $scope.requiredParameters.oauth_consumer_key + '"',
-            'oauth_nonce="' + $scope.requiredParameters.oauth_nonce + '"',
-            'oauth_signature_method="HMAC-SHA1"',
-            'oauth_timestamp="' + $scope.requiredParameters.oauth_timestamp + '"',
-            'oauth_signature="' + $scope.hmac_sha1 + '"',
-            'oauth_version="1.0"'].join(',');
+         var requiredParameterKeys = Object.keys($scope.requiredParameters);
+         for (var i = 0; i < requiredParameterKeys.length; i++) {
+         if (i == requiredParameterKeys.length - 1) {
+         $scope.base_signature_string += encodeURIComponent(requiredParameterKeys[i] + "=" + $scope.requiredParameters[requiredParameterKeys[i]]);
+         } else {
+         $scope.base_signature_string += encodeURIComponent(requiredParameterKeys[i] + "=" + $scope.requiredParameters[requiredParameterKeys[i]] + "&");
+         }
+         }
+         if (typeof $scope.base_signature_string !== "undefined" && $scope.base_signature_string.length > 0) {
+         if (typeof $scope.oauth_consumer_secret !== "undefined" && $scope.oauth_consumer_secret.length > 0) {
+         var shaObj = new jsSHA($scope.base_signature_string, "TEXT");
+         $scope.hmac_sha1 = encodeURIComponent(shaObj.getHMAC($scope.oauth_consumer_secret + "&", "TEXT", "SHA-1", "B64"));
+         }
+         }
+         var _authHeader = ['OAuth oauth_callback="' + encodeURIComponent('https://sandeepiitr91.github.io/test-twitter/') + '"',
+         'oauth_consumer_key="' + $scope.requiredParameters.oauth_consumer_key + '"',
+         'oauth_nonce="' + $scope.requiredParameters.oauth_nonce + '"',
+         'oauth_signature_method="HMAC-SHA1"',
+         'oauth_timestamp="' + $scope.requiredParameters.oauth_timestamp + '"',
+         'oauth_signature="' + $scope.hmac_sha1 + '"',
+         'oauth_version="1.0"'].join(',');
 
-        /* OAuth oauth_consumer_key="7e7u2AdYFdyJlwBBRKUWtaG0z",
-         oauth_signature_method="HMAC-SHA1",
-         oauth_timestamp="1488452489",
-         oauth_nonce="xvKaPI",oauth_version="1.0",
-         oauth_signature="zFzZvNsMKyB3XoskeFnM16CzLoc%3D"*/
 
         $http({
             method: 'POST',
@@ -117,8 +112,29 @@ function SocialRequestController($scope, $http) {
             this.responseToken = response;
         });
 
-    }
+    }*/
 
+  $scope.twitterAuthenticate = function () {
+      OAuth.initialize('Fyz29IKDeOZMK-nsuzSf4DlksWM');
+      var provider = 'twitter'
+      OAuth.popup(provider)
+              .done(function (result) {
+                  result.get('/me')
+                          .done(function (response) {
+                              //this will display "John Doe" in the console
+                              console.log(response.name);
+                          })
+                          .fail(function (err) {
+                              //handle error with err
+                          });
+              })
+              .fail(function (err) {
+                  //handle error with err
+              });
+  }
+
+
+// Twitter Login using Firebase
     $scope.twitterLogin = function () {
         var provider = new firebase.auth.TwitterAuthProvider();
         firebase.auth().signInWithPopup(provider).then(function (result) {
@@ -142,4 +158,3 @@ function SocialRequestController($scope, $http) {
         });
     }
 }
-

@@ -1,5 +1,5 @@
 
-<html ng-app="dtr">
+<html ng-app="myApp">
 
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
@@ -42,12 +42,13 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
 
 	<script src="lib/js-sha/sha1.js"></script>
-	<script src="lib/oauth.io/oauth.io.js"></script>
-
-
+	<script src="oauth.js"></script>
 	<script src="social-request-controller.js"></script>
+	<script src="app.js"></script>
+
 
 <script src="https://www.gstatic.com/firebasejs/3.7.2/firebase.js"></script>
+
 <script>
   // Initialize Firebase
   var config = {
@@ -59,6 +60,7 @@
   };
   firebase.initializeApp(config);
 </script>
+
 <div ng-controller="SocialRequestController as ctrl">
 
 	<div class="instgramProfile">
@@ -81,13 +83,13 @@
 
 	<div class="in-login" ng-click="twitterAuthenticate()">
 		<i class="fa fa-twitter" aria-hidden="true"></i>
-		Connect your profile with Twitter
+		Connect your profile with Twitter via oauth.io
 	</div>
 
 
 	<div class="in-login" ng-click="twitterLogin()">
 		<i class="fa fa-twitter" aria-hidden="true"></i>
-		Connect your profile with Twitter
+		Connect your profile with Twitter via firebase
 	</div>
 
 </div>
