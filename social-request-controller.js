@@ -28,7 +28,7 @@ function SocialRequestController($scope, $http) {
         _this.instagramProfileConnected = false;
         $http.jsonp(url).then(function (response) {
             _this.instagramUserInfo = response.data.data;
-            _this.instagramProfileConnected = true;
+
         })
 
     }
@@ -121,7 +121,6 @@ function SocialRequestController($scope, $http) {
               .done(function (result) {
                   result.get('/me')
                           .done(function (response) {
-                              //this will display "John Doe" in the console
                               console.log(response.name);
                           })
                           .fail(function (err) {
