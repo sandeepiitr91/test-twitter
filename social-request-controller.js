@@ -125,6 +125,7 @@ function SocialRequestController($scope, $http) {
                               console.log(response.name);
                           })
                           .fail(function (err) {
+                              console.log(err);
                               //handle error with err
                           });
               })
