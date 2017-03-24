@@ -136,14 +136,6 @@ function SocialRequestController($scope, $http) {
 
 // Twitter Login using Firebase
     $scope.twitterLogin = function () {
-        var config = {
-            apiKey: "AIzaSyCIa1DaJHZ7Hcr4qYpwnYNh7ybkqFmn7L8",
-            authDomain: "sandeep-app-f841f.firebaseapp.com",
-            databaseURL: "https://sandeep-app-f841f.firebaseio.com",
-            storageBucket: "sandeep-app-f841f.appspot.com",
-            messagingSenderId: "173314726936"
-        };
-        firebase.initializeApp(config);
         var provider = new firebase.auth.TwitterAuthProvider();
         firebase.auth().signInWithPopup(provider).then(function (result) {
             // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
