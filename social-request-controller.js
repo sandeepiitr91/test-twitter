@@ -130,6 +130,7 @@ function SocialRequestController($scope, $http) {
                           });
               })
               .fail(function (err) {
+                   console.log(err);
                   //handle error with err
               });
   }
