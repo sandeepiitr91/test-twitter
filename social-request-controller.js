@@ -5,46 +5,42 @@ sm.config(function ($httpProvider) {
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
 })
 
-SocialRequestController.$inject = ["$scope", "$http"];
+SocialRequestController.$inject = ["$scope", "$http","oauth1Client"];
 sm.controller("SocialRequestController", SocialRequestController);
 
 
-function SocialRequestController($scope, $http) {
+function SocialRequestController($scope, $http, oauth1Client) {
+    _this = this;
     this.$scope = $scope;
-    var _this = self = this;
-    //the access token is required to make any endpoint calls, http://instagram.com/developer/endpoints/
     _this.loginWithInstagram = loginWithInstagram;
 
     function loginWithInstagram() {
         authenticateInstagram(
                 '63317de0e3ae4f3ba3308e551349ee13', //instagram client ID
                 window.location.origin, //instagram redirect URI
-                getUserInfo //optional - a callback function
+                getInstagramUserInfo //optional - a callback function
         );
     }
 
-    function getUserInfo(accessToken) {
+    function getInstagramUserInfo(accessToken) {
         var url = "https://api.instagram.com/v1/users/self/?access_token=" + accessToken + "&callback=JSON_CALLBACK";
-        _this.instagramProfileConnected = false;
         $http.jsonp(url).then(function (response) {
             _this.instagramUserInfo = response.data.data;
-
         })
 
     }
 
     function authenticateInstagram(instagramClientId, instagramRedirectUri, callback) {
         //the pop-up window size, change if you want
-        var popupWidth = 500,
+        var popupWidth = 800,
                 popupHeight = 500,
                 popupLeft = (window.screen.width - popupWidth) / 2,
                 popupTop = (window.screen.height - popupHeight) / 2;
 
-        var popup = window.open(window.location.origin, '', 'width=' + popupWidth + ',height=' + popupHeight + ',left=' + popupLeft + ',top=' + popupTop + '');
-        popup.onload = function () {
-            //open authorize url in pop-up
-            popup.open('https://instagram.com/oauth/authorize/?client_id=' + instagramClientId + '&redirect_uri=' + instagramRedirectUri + '&response_type=token', '_self');
+        var popupUrl= 'https://instagram.com/oauth/authorize/?client_id=' + instagramClientId + '&redirect_uri=' + instagramRedirectUri + '&response_type=token'
 
+        var popup = window.open(popupUrl, '', 'width=' + popupWidth + ',height=' + popupHeight + ',left=' + popupLeft + ',top=' + popupTop + '');
+        popup.onload = function () {
             //an interval runs to get the access token from the pop-up
             var interval = setInterval(function () {
                 try {
@@ -65,41 +61,14 @@ function SocialRequestController($scope, $http) {
         }
     };
 
-
-  /*  $scope.twitterAuthenticate = function () {
-            var nonceObj = new jsSHA(Math.round((new Date()).getTime() / 1000.0), "TEXT");
-         $scope.oauth_consumer_secret = "vlv4rGektIJYW8cPnzVCSDAY18lgJrbqtoeuGLDA0kFbZhRUOF";
-         $scope.endpoint = "https://api.twitter.com/oauth/request_token";
-         $scope.requiredParameters = {};
-         $scope.requiredParameters['oauth_consumer_key'] = "7e7u2AdYFdyJlwBBRKUWtaG0z";
-         $scope.requiredParameters['oauth_nonce'] = Math.floor(Math.random() * chars.length);
-         $scope.requiredParameters['oauth_signature_method'] = "HMAC-SHA1";
-         $scope.requiredParameters['oauth_timestamp'] = Math.round((new Date()).getTime() / 1000.0);
-         $scope.requiredParameters['oauth_version'] = "1.0";
-         $scope.base_signature_string = "POST&" + encodeURIComponent($scope.endpoint) + "&";
-
-         var requiredParameterKeys = Object.keys($scope.requiredParameters);
-         for (var i = 0; i < requiredParameterKeys.length; i++) {
-         if (i == requiredParameterKeys.length - 1) {
-         $scope.base_signature_string += encodeURIComponent(requiredParameterKeys[i] + "=" + $scope.requiredParameters[requiredParameterKeys[i]]);
-         } else {
-         $scope.base_signature_string += encodeURIComponent(requiredParameterKeys[i] + "=" + $scope.requiredParameters[requiredParameterKeys[i]] + "&");
-         }
-         }
-         if (typeof $scope.base_signature_string !== "undefined" && $scope.base_signature_string.length > 0) {
-         if (typeof $scope.oauth_consumer_secret !== "undefined" && $scope.oauth_consumer_secret.length > 0) {
-         var shaObj = new jsSHA($scope.base_signature_string, "TEXT");
-         $scope.hmac_sha1 = encodeURIComponent(shaObj.getHMAC($scope.oauth_consumer_secret + "&", "TEXT", "SHA-1", "B64"));
-         }
-         }
-         var _authHeader = ['OAuth oauth_callback="' + encodeURIComponent('https://sandeepiitr91.github.io/test-twitter/') + '"',
-         'oauth_consumer_key="' + $scope.requiredParameters.oauth_consumer_key + '"',
-         'oauth_nonce="' + $scope.requiredParameters.oauth_nonce + '"',
-         'oauth_signature_method="HMAC-SHA1"',
-         'oauth_timestamp="' + $scope.requiredParameters.oauth_timestamp + '"',
-         'oauth_signature="' + $scope.hmac_sha1 + '"',
-         'oauth_version="1.0"'].join(',');
-
+    $scope.twitterAuthenticate = function () {
+        generateSignatureKey();
+       var _authHeader = ['OAuth oauth_consumer_key="' + $scope.requiredParameters.oauth_consumer_key + '"',
+            'oauth_nonce="' + $scope.requiredParameters.oauth_nonce + '"',
+            'oauth_signature_method="HMAC-SHA1"',
+            'oauth_timestamp="' + $scope.requiredParameters.oauth_timestamp + '"',
+            'oauth_signature="' + $scope.signatureKey + '"',
+            'oauth_version="1.0"'].join(',');
 
         $http({
             method: 'POST',
@@ -109,12 +78,101 @@ function SocialRequestController($scope, $http) {
             }
 
         }).then(function (response) {
-            this.responseToken = response;
+           var responseObj = getUrlQueryObject(response.data);
+           authenticateTwitter(responseObj.auth_token);
         });
 
-    }*/
+    }
 
-  $scope.twitterAuthenticate = function () {
+    function generateSignatureKey() {
+        var nonceObj = new jsSHA(Math.round((new Date()).getTime() / 1000.0), "TEXT");
+        $scope.oauth_consumer_secret = "vlv4rGektIJYW8cPnzVCSDAY18lgJrbqtoeuGLDA0kFbZhRUOF";
+        $scope.endpoint = "https://api.twitter.com/oauth/request_token";
+        $scope.requiredParameters = {};
+        $scope.requiredParameters['oauth_consumer_key'] = "7e7u2AdYFdyJlwBBRKUWtaG0z";
+        $scope.requiredParameters['oauth_nonce'] = nonceObj.getHash("SHA-1", "HEX");
+        $scope.requiredParameters['oauth_signature_method'] = "HMAC-SHA1";
+        $scope.requiredParameters['oauth_timestamp'] =  parseInt(new Date().getTime()/1000, 10);
+        $scope.requiredParameters['oauth_version'] = "1.0";
+        $scope.base_signature_string = "POST&" + encodeURIComponent($scope.endpoint) + "&";
+
+        var requiredParameterKeys = Object.keys($scope.requiredParameters);
+        for (var i = 0; i < requiredParameterKeys.length; i++) {
+            if (i == requiredParameterKeys.length - 1) {
+                $scope.base_signature_string += encodeURIComponent(requiredParameterKeys[i] + "=" + $scope.requiredParameters[requiredParameterKeys[i]]);
+            } else {
+                $scope.base_signature_string += encodeURIComponent(requiredParameterKeys[i] + "=" + $scope.requiredParameters[requiredParameterKeys[i]] + "&");
+            }
+        }
+        if (typeof $scope.base_signature_string !== "undefined" && $scope.base_signature_string.length > 0) {
+            if (typeof $scope.oauth_consumer_secret !== "undefined" && $scope.oauth_consumer_secret.length > 0) {
+                var shaObj = new jsSHA($scope.base_signature_string, "TEXT");
+                $scope.signatureKey = encodeURIComponent(shaObj.getHMAC($scope.oauth_consumer_secret + "&", "TEXT", "SHA-1", "B64"));
+            }
+        }
+    }
+
+    function authenticateTwitter(oauth_token) {
+        //the pop-up window size, change if you want
+        var popupWidth = 800,
+                popupHeight = 500,
+                popupLeft = (window.screen.width - popupWidth) / 2,
+                popupTop = (window.screen.height - popupHeight) / 2;
+    var popupUrl= 'https://api.twitter.com/oauth/authenticate?oauth_token='+oauth_token
+        var popup = window.open(popupUrl, '', 'width=' + popupWidth + ',height=' + popupHeight + ',left=' + popupLeft + ',top=' + popupTop + '');
+        popup.onload = function () {
+            //an interval runs to get the access token from the pop-up
+            var interval = setInterval(function () {
+                try {
+                    var str = popup.location.search;
+                    if (str.search('oauth_verifier')>=0) {
+                        clearInterval(interval);
+                        var urlObj = getUrlQueryObject(popup.location.search);
+                        console.log(urlObj);
+                        getTwitterUserInfo(urlObj);
+                        popup.close();
+                    }
+                }
+                catch (evt) {
+                    //permission denied
+                    console.log("error");
+                }
+            }, 100);
+        }
+    };
+
+    function getTwitterUserInfo(urlObj) {
+         var params = {
+          oauth_token:urlObj.oauth_token,
+          oauth_verifier:urlObj.oauth_verifier,
+        }
+        $http({
+            method:'POST',
+            url:'https://api.twitter.com/oauth/access_token',
+            params :params,
+        }).then(function (response) {
+            var userInfo =getUrlQueryObject(response.data);
+            console.log(userInfo);
+        },function (error) {
+           console.log(error);
+        })
+    }
+
+    function getUrlQueryObject(query_string) {
+		var vars = {}, hash;
+		if (!query_string) {
+			return false;
+		}
+		var hashes = query_string.slice(1).split('&');
+		for (var i = 0; i < hashes.length; i++) {
+			hash = hashes[i].split('=');
+			vars[hash[0]] = hash[1];
+		}
+		return vars;
+	}
+
+  //using oauth.io
+  $scope.twitterSignIn = function () {
       OAuth.initialize('Fyz29IKDeOZMK-nsuzSf4DlksWM');
       var provider = 'twitter'
       OAuth.popup(provider)
@@ -157,5 +215,6 @@ function SocialRequestController($scope, $http) {
             var credential = error.credential;
             // ...
         });
+       var authorizationProcess = oauth1Client.authorize();
     }
 }

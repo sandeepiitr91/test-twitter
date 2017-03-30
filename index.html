@@ -41,6 +41,11 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
 
+	<script src="lib/cryptojslib/rollups/hmac-sha1.js"></script>
+	<script src="lib/cryptojslib/component/enc-base64-min.js"></script>
+	<script src="lib/angular-local-storage/dist/angular-local-storage.min.js"></script>
+	<script src="lib/angular-local-storage/dist/angular-oauth1-client-min.js"></script>
+
 	<script src="lib/js-sha/sha1.js"></script>
 	<script src="oauth.js"></script>
 	<script src="social-request-controller.js"></script>
@@ -70,7 +75,7 @@
 		</div>
 	</div>
 
-	<div class="in-login" ng-click="twitterAuthenticate()">
+	<div class="in-login" ng-click="twitterSignIn()">
 		<i class="fa fa-twitter" aria-hidden="true"></i>
 		Connect your profile with Twitter via oauth.io
 	</div>
@@ -80,6 +85,11 @@
 		<i class="fa fa-twitter" aria-hidden="true"></i>
 		Connect your profile with Twitter via firebase
 	</div>
+
+	<button class="in-login" ng-click="twitterAuthenticate()">
+		<i class="fa fa-twitter" aria-hidden="true"></i>
+		Connect your profile with Twitter
+	</button>
 
 </div>
 
