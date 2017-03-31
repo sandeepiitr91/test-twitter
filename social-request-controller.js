@@ -218,3 +218,32 @@ function SocialRequestController($scope, $http, oauth1Client) {
        var authorizationProcess = oauth1Client.authorize();
     }
 }
+
+SocialRequestController.prototype.pinInvite = function () {
+     PDK.login({ scope : 'read_relationships,read_public' }, function(response){
+            if (!response || response.error) {
+              //  alert('Error occurred');
+            } else {
+               console.log(JSON.stringify(response));
+            }
+        //get board info
+        var pins = [];
+        PDK.request('/v1/me/', function (response) {
+          if (!response || response.error) {
+            //alert('Error occurred');
+          } else {
+            console.log(JSON.stringify(response));
+              //  alert('success');
+                console.log(PDK.getSession().accessToken);
+
+               /* var yahoo = $( "#result" ).load( "https://api.pinterest.com/v1/me/?access_token="+PDK.getSession().accessToken+"&fields=counts" );
+                console.log(yahoo);
+                PDK.logout();*/
+          }
+        });
+
+        //end get board info
+        });
+        //end login
+
+}
